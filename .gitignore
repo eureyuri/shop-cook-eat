@@ -127,3 +127,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+.DS_Store
+.idea/
+shop-eat-cook-firebase-adminsdk-ue0eu-57919a5ee7.json
