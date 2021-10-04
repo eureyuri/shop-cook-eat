@@ -1,74 +1,98 @@
-import logo from './logo.svg';
 import './App.css';
 import Shelf from "./Shelf";
 import {useState} from "react";
 import {addItem} from "./api";
+import AddIcon from '@mui/icons-material/Add';
+import ListAltIcon from '@mui/icons-material/ListAlt';
+import KitchenIcon from '@mui/icons-material/Kitchen';
 
 function App() {
     const [title, setTitle] = useState('')
     const [nonce, setNonce] = useState(0)
+    const [openAdd, setOpenAdd] = useState(false)
+    const [tab, setTab] = useState('list')
 
   return (
     <div className="App mt-5">
         <header className="App-header">
-            <h1>Shelf</h1>
+            <h1>Shop Cook Eat!</h1>
+            <h2>Shopping List</h2>
+            <button onClick={() => setOpenAdd(true)}><AddIcon /></button>
         </header>
 
         <div className="container mt-4 px-5">
 
-            <div className="row">
-                <div className="col-md-8 offset-md-2 row justify-content-center add">
-                    <div className="col-auto">
-                        <input
-                            type="text"
-                            className="form-control"
-                            value={title}
-                            placeholder={"Item Name"}
-                            onChange={e => setTitle(e.target.value)}
-                        />
-                    </div>
-                    <div className="col-auto">
-                        <button
-                            type="submit"
-                            className="btn btn-primary"
-                            disabled={title === ''}
-                            onClick={() => {
-                                addItem(title).then(() => {
-                                    setTitle('')
-                                    setNonce(nonce + 1)
-                                })
-                            }}
-                        >
-                            Add
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <ul className="nav nav-tabs nav-fill mt-4 col-md-8" id="myTab" role="tablist">
-                <li className="nav-item" role="presentation">
-                    <button className="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home"
-                            type="button" role="tab" aria-controls="home" aria-selected="true">
-                        List
-                    </button>
-                </li>
-                <li className="nav-item" role="presentation">
-                    <button className="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile"
-                            type="button" role="tab" aria-controls="profile" aria-selected="false">
-                        Archive
-                    </button>
-                </li>
-            </ul>
+            {/*<div className="row">*/}
+            {/*    <div className="col-md-8 offset-md-2 row justify-content-center add">*/}
+            {/*        <div className="col-auto">*/}
+            {/*            <input*/}
+            {/*                type="text"*/}
+            {/*                className="form-control"*/}
+            {/*                value={title}*/}
+            {/*                placeholder={"Item Name"}*/}
+            {/*                onChange={e => setTitle(e.target.value)}*/}
+            {/*            />*/}
+            {/*        </div>*/}
+            {/*        <div className="col-auto">*/}
+            {/*            <button*/}
+            {/*                type="submit"*/}
+            {/*                className="btn btn-primary"*/}
+            {/*                disabled={title === ''}*/}
+            {/*                onClick={() => {*/}
+            {/*                    addItem(title).then(() => {*/}
+            {/*                        setTitle('')*/}
+            {/*                        setNonce(nonce + 1)*/}
+            {/*                    })*/}
+            {/*                }}*/}
+            {/*            >*/}
+            {/*                Add*/}
+            {/*            </button>*/}
+            {/*        </div>*/}
+            {/*    </div>*/}
+            {/*</div>*/}
 
             <div className="tab-content mt-4" id="myTabContent">
-                <div className="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-                    <Shelf nonce={nonce} setNonce={setNonce} />
-                </div>
-                <div className="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-                    <Shelf nonce={nonce} setNonce={setNonce} archive />
-                </div>
+                {tab === 'list' && (
+                    <div className="tab-pane fade show active" id="list" role="tabpanel" aria-labelledby="list-tab">
+                        <Shelf nonce={nonce} setNonce={setNonce} />
+                        HELLO
+                    </div>
+                )}
+                {tab === 'fridge' && (
+                    <div className="tab-pane fade show active" id="fridge" role="tabpanel" aria-labelledby="fridge-tab">
+                        Hello2
+                        <Shelf nonce={nonce} setNonce={setNonce} archive />
+                    </div>
+                )}
             </div>
         </div>
+
+        <footer class="footer">
+            <nav>
+                <div id="buttonGroup" class="nav btn-group selectors" role="tablist">
+                    <button id="list"
+                            // type="button"
+                            class={`btn btn-secondary ${tab === 'list' ? 'button-active' : 'button-inactive'}`}
+                            onClick={() => setTab('list')}
+                    >
+                       <div class="selector-holder">
+                          <ListAltIcon />
+                          <span>List</span>
+                       </div>
+                    </button>
+                    <button id="fridge"
+                            // type="button"
+                            class={`btn btn-secondary ${tab === 'fridge' ? 'button-active' : 'button-inactive'}`}
+                            onClick={() => setTab('fridge')}
+                    >
+                       <div class="selector-holder">
+                          <KitchenIcon />
+                          <span>Fridge</span>
+                       </div>
+                    </button>
+                </div>
+            </nav>
+      </footer>
 
     </div>
   );
