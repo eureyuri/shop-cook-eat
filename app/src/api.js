@@ -18,6 +18,11 @@ export const getList = async function () {
     return response.json();
 }
 
+export const getFridgeList = async function () {
+    const response = await fetch(BASE_URL + "/fridge", GET_OPTIONS);
+    return response.json();
+}
+
 export const addItem = async function(title) {
     const options = { ...POST_OPTIONS };
     options.body = JSON.stringify({title});
@@ -32,16 +37,23 @@ export const updateItem = async function(itemId, title) {
     return response.json();
 }
 
-export const archiveItem = async function(itemId) {
+export const finishShopping = async function(itemIds) {
     const options = { ...POST_OPTIONS };
-    options.body = JSON.stringify({id: itemId});
-    const response = await fetch(BASE_URL + "/archive", options);
+    options.body = JSON.stringify({ids: itemIds});
+    const response = await fetch(BASE_URL + "/finish_shopping", options);
     return response.json();
 }
 
 export const deleteItem = async function(itemId) {
     const options = { ...POST_OPTIONS };
     options.body = JSON.stringify({id: itemId});
-    const response = await fetch(BASE_URL + "/delete", options);
+    const response = await fetch(BASE_URL + "/delete_shopping", options);
+    return response.json();
+}
+
+export const deleteFridgeItem = async function(itemId) {
+    const options = { ...POST_OPTIONS };
+    options.body = JSON.stringify({id: itemId});
+    const response = await fetch(BASE_URL + "/delete_fridge", options);
     return response.json();
 }
