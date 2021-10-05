@@ -23,10 +23,10 @@ export const getFridgeList = async function () {
     return response.json();
 }
 
-export const addItem = async function(title) {
+export const addItem = async function(name, quantity, unit) {
     const options = { ...POST_OPTIONS };
-    options.body = JSON.stringify({title});
-    const response = await fetch(BASE_URL + "/create", options);
+    options.body = JSON.stringify({name, quantity, unit});
+    const response = await fetch(BASE_URL + "/add_shopping", options);
     return response.json();
 }
 

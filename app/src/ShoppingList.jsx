@@ -1,13 +1,18 @@
 import React, {useEffect, useState} from 'react';
-import {finishShopping, getList} from "./api";
+import {addItem, finishShopping, getList} from "./api";
 import Item from "./Item";
 import AddIcon from "@mui/icons-material/Add";
+import AddModal from "./Modal/AddModal";
 
 function ShoppingList({nonce, setNonce, itemToMove, setItemToMove}) {
     const [openAdd, setOpenAdd] = useState(false)
     const [openEdit, setOpenEdit] = useState(false)
     const [toEdit, setToEdit] = useState('')
     const [items, setItems] = useState([])
+
+    const onAdd = (name, quantity, unit) => {
+        addItem(name, quantity, unit).then(() => setNonce(nonce + 1))
+    }
 
     useEffect(() => {
         getList().then(it => {
@@ -47,6 +52,9 @@ function ShoppingList({nonce, setNonce, itemToMove, setItemToMove}) {
             }
 
             <button onClick={() => finishShopping(Array.from(itemToMove.keys()))}>Finish Shopping</button>
+
+            {openAdd && <AddModal list show={openAdd} onHide={() => setOpenAdd(false)} onAdd={onAdd} />}
+
         </div>
     );
 }
