@@ -31,7 +31,11 @@ def index():
 @cross_origin()
 def show_shopping():
     try:
-        shopping_list = [doc.to_dict() for doc in shopping_list_ref.stream()]
+        shopping_list = []
+        for doc in shopping_list_ref.stream():
+            data = doc.to_dict()
+            data['id'] = doc.id
+            shopping_list.append(data)
         return jsonify(shopping_list)
     except Exception as e:
         return f"An Error Occurred: {e}"
@@ -41,8 +45,31 @@ def show_shopping():
 @cross_origin()
 def show_fridge():
     try:
-        fridge_list = [doc.to_dict() for doc in fridge_list_ref.stream()]
+        fridge_list = []
+        for doc in fridge_list_ref.stream():
+            data = doc.to_dict()
+            data['id'] = doc.id
+            fridge_list.append(data)
         return jsonify(fridge_list)
+    except Exception as e:
+        return f"An Error Occurred: {e}"
+
+
+@app.route("/food", methods=["POST"])
+@cross_origin()
+def get_food():
+    try:
+        search = request.json["search_term"]
+        print(search)
+        item = food_data_ref.where(u'name', u'==', search).where('name', '<=', search + '\uf8ff').stream()
+        print(item)
+        # food_list = []
+        # for doc in food_data_ref.stream():
+        #     data = doc.to_dict()
+        #     print(data)
+        #     food_list.append(data.name)
+        # print(food_list)
+        return jsonify(item)
     except Exception as e:
         return f"An Error Occurred: {e}"
 
@@ -74,7 +101,7 @@ def finish_shopping():
         for _id in ids:
             # Get details of item associated with id
             details = shopping_list_ref.document(_id).get().to_dict()
-            details['expire'] = get_expire(details['name'], datetime.datetime.strptime(datetime.date.today(), "%m/%d/%y"))
+            details['expire'] = get_expire(details['name'], datetime.datetime.strptime(str(datetime.date.today()), "%Y-%m-%d"))
 
             # Add item to fridge
             fridge_list_ref.add(details)
@@ -144,6 +171,8 @@ def add_fridge():
             bought_date = request.json["bought_date"]
             bought_date = datetime.datetime.strptime(bought_date, "%m/%d/%y")
             expire = get_expire(name, bought_date)
+        else:
+            expire = datetime.datetime.strptime(expire, "%m/%d/%y")
 
         fridge_list_ref.add({
             u'name': name,
@@ -181,7 +210,7 @@ def edit_fridge():
             u'name': request.json['name'],
             u'quantity': request.json['quantity'],
             u'unit': request.json['unit'],
-            u'expire': request.json['expire']
+            u'expire': datetime.datetime.strptime(request.json['expire'], "%m/%d/%y")
         })
         return jsonify({"success": True})
     except Exception as e:
