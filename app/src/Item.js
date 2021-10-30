@@ -1,45 +1,38 @@
-import React, {useState} from 'react';
-import Button from "react-bootstrap/Button";
-import {archiveItem, deleteItem, updateItem} from "./api";
+import React from 'react';
+import {deleteItem} from "./api";
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import EditIcon from '@mui/icons-material/Edit';
+import './item.css'
 
-function Item({itemId, title, nonce, setNonce, archive}) {
-    const [newTitle, setNewTitle] = useState(title)
-
-    const updateTitle = (itemId, newTitle) => {
-        updateItem(itemId, newTitle).then(setNonce(nonce + 1))
-    }
-
-    const deleteTitle = itemId => {
+function Item({itemId, name, quantity, unit, nonce, setNonce, itemToMove, setItemToMove, setOpenEdit, setToEdit}) {
+    const deleteListItem = itemId => {
         deleteItem(itemId).then(setNonce(nonce + 1))
     }
 
-    const archiveTitle = itemId => {
-        archiveItem(itemId).then(setNonce(nonce + 1))
+    const updateItemToMove = id => {
+        const tempMap = itemToMove
+        tempMap.set(id, !tempMap.get(id))
+        setItemToMove(tempMap)
     }
 
     return (
         <div className={'row item mb-2'}>
-            <input type={'text'} value={newTitle} onChange={e => setNewTitle(e.target.value)} />
-            <Button
-                variant={'outline-primary'}
-                onClick={() => updateTitle(itemId, newTitle)}
-            >
-                Update
-            </Button>
-            {!archive &&
-                <Button
-                    variant={'outline-secondary'}
-                    onClick={() => archiveTitle(itemId)}
-                >
-                    Archive
-                </Button>
-            }
-            <Button
-                variant={'outline-danger'}
-                onClick={() => deleteTitle(itemId)}
-            >
-                Delete
-            </Button>
+            <div>
+                <input type={'checkbox'}
+                       id={name}
+                       name={name}
+                       onClick={() => updateItemToMove(itemId)}
+                />
+                <label htmlFor={name}>{`${quantity} ${unit === null ? '' : unit} ${name}`}</label>
+            </div>
+            <div>
+                <EditIcon onClick={() => {
+                    setToEdit(itemId)
+                    setOpenEdit(true)
+                }} />
+                <DeleteOutlineIcon onClick={() => deleteListItem(itemId)} />
+            </div>
+
         </div>
     );
 }
