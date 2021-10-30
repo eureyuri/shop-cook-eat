@@ -1,6 +1,8 @@
 .App {
     text-align: center;
-    overflow: hidden;
+    overflow: scroll;
+    margin-bottom: 4rem;
+    padding-bottom: 1rem;
 }
 
 .container {
@@ -76,9 +78,26 @@
 
 /* Colors of the buttons*/
 .button-active, .selectors button:hover, .selectors button:active, .selectors button:focus{
-    color: #ff9238;
+    /*color: #ff9238;*/
+    color: #198754;
 }
 
 .button-inactive{
     color: #000;
 }
+
+.tab-content {
+    width: 100%;
+}
+
+.row__shopping_list {
+    align-items: center;
+}
+
+/*.shopping_list__title {*/
+/*    padding-left: 0 !important;*/
+/*}*/
+
+/*.shopping_list__btn {*/
+/*    padding-right: 0 !important;*/
+/*}*/

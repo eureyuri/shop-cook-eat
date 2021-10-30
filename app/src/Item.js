@@ -1,10 +1,14 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {deleteItem} from "./api";
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import EditIcon from '@mui/icons-material/Edit';
 import './item.css'
+import EdiModal from "./Modal/EdiModal";
+import {Col} from "react-bootstrap";
 
-function Item({itemId, name, quantity, unit, nonce, setNonce, itemToMove, setItemToMove, setOpenEdit, setToEdit}) {
+function Item({itemId, name, quantity, unit, nonce, setNonce, itemToMove, setItemToMove}) {
+    const [openEdit, setOpenEdit] = useState(false)
+
     const deleteListItem = itemId => {
         deleteItem(itemId).then(setNonce(nonce + 1))
     }
@@ -17,22 +21,36 @@ function Item({itemId, name, quantity, unit, nonce, setNonce, itemToMove, setIte
 
     return (
         <div className={'row item mb-2'}>
-            <div>
+            <Col xs={1} className={'text-start'}>
                 <input type={'checkbox'}
                        id={name}
                        name={name}
                        onClick={() => updateItemToMove(itemId)}
                 />
-                <label htmlFor={name}>{`${quantity} ${unit === null ? '' : unit} ${name}`}</label>
-            </div>
-            <div>
+            </Col>
+            <Col xs={7}>
+                <label htmlFor={name}>{`${name} ${quantity} ${unit === null ? '' : unit}`}</label>
+            </Col>
+            <Col xs={4} className={'text-end'}>
                 <EditIcon onClick={() => {
-                    setToEdit(itemId)
                     setOpenEdit(true)
                 }} />
                 <DeleteOutlineIcon onClick={() => deleteListItem(itemId)} />
-            </div>
+            </Col>
 
+            {openEdit &&
+                <EdiModal
+                    list
+                    show={openEdit}
+                    onHide={() => setOpenEdit(false)}
+                    id={itemId}
+                    name={name}
+                    quantity={quantity}
+                    unit={unit}
+                    nonce={nonce}
+                    setNonce={setNonce}
+                />
+            }
         </div>
     );
 }

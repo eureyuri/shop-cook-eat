@@ -2,4 +2,15 @@
     display: flex;
     flex-wrap: nowrap;
     text-align: left;
+    width: 100%;
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+}
+
+.expiration_date {
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+    padding-right: calc(1.5rem * .5);
+    padding-left: calc(1.5rem * .5);
+    font-weight: bold;
 }

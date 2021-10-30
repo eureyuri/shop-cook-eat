@@ -3,11 +3,10 @@ import {addItem, finishShopping, getList} from "./api";
 import Item from "./Item";
 import AddIcon from "@mui/icons-material/Add";
 import AddModal from "./Modal/AddModal";
+import {Col, Row} from "react-bootstrap";
 
 function ShoppingList({nonce, setNonce, itemToMove, setItemToMove}) {
     const [openAdd, setOpenAdd] = useState(false)
-    const [openEdit, setOpenEdit] = useState(false)
-    const [toEdit, setToEdit] = useState('')
     const [items, setItems] = useState([])
 
     const onAdd = (name, quantity, unit) => {
@@ -27,35 +26,51 @@ function ShoppingList({nonce, setNonce, itemToMove, setItemToMove}) {
     }, [nonce])
 
     return (
-        <div>
-            {
-                openEdit && (<div>Edit</div>)
-            }
+        <>
+            <Row className={'row__shopping_list mb-4'}>
+                <Col className={'text-start'}>
+                    <h2>Shopping List</h2>
+                </Col>
+                <Col xs={4} className={'text-end'}>
+                    <button className={'btn btn-success btn-circle'} onClick={() => setOpenAdd(true)}><AddIcon /></button>
+                </Col>
+            </Row>
 
-            <h2>Shopping List</h2>
-            <button onClick={() => setOpenAdd(true)}><AddIcon /></button>
             {
                 items.map((item) =>
-                    <Item key={item.id}
-                          itemId={item.id}
-                          name={item.name}
-                          quantity={item.quantity}
-                          unit={item.unit}
-                          nonce={nonce}
-                          setNonce={setNonce}
-                          itemToMove={itemToMove}
-                          setItemToMove={setItemToMove}
-                          setOpenEdit={setOpenEdit}
-                          setToEdit={setToEdit}
-                    />
+                    <Row>
+                        <Item key={item.id}
+                              itemId={item.id}
+                              name={item.name}
+                              quantity={item.quantity}
+                              unit={item.unit}
+                              nonce={nonce}
+                              setNonce={setNonce}
+                              itemToMove={itemToMove}
+                              setItemToMove={setItemToMove}
+                        />
+                    </Row>
                 )
             }
 
-            <button onClick={() => finishShopping(Array.from(itemToMove.keys()))}>Finish Shopping</button>
+            <Row className={'mt-4 mx-2'}>
+                <button
+                    onClick={() => {
+                        const toMove = []
+                        itemToMove.forEach((v, k) => {
+                            if (v) toMove.push(k)
+                        })
+                        finishShopping(toMove).then(() => setNonce(nonce + 1))
+                    }}
+                    className={'btn btn-success finish_shopping py-2'}
+                >
+                    Finish Shopping
+                </button>
+            </Row>
 
             {openAdd && <AddModal list show={openAdd} onHide={() => setOpenAdd(false)} onAdd={onAdd} />}
 
-        </div>
+        </>
     );
 }
 

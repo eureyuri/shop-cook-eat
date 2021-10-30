@@ -17,7 +17,7 @@ function App() {
             <h1>Shop Cook Eat!</h1>
         </header>
 
-        <div className="container mt-4 px-5">
+        <div className="container px-5">
             <div className="tab-content mt-4" id="myTabContent">
                 {tab === 'list' && (
                     <div className="tab-pane fade show active" id="list" role="tabpanel" aria-labelledby="list-tab">
@@ -41,7 +41,7 @@ function App() {
                 <div id="buttonGroup" className="nav btn-group selectors" role="tablist">
                     <button id="list"
                             type="button"
-                            className={`btn btn-secondary ${tab === 'list' ? 'button-active' : 'button-inactive'}`}
+                            className={`btn btn-success ${tab === 'list' ? 'button-active' : 'button-inactive'}`}
                             onClick={() => setTab('list')}
                     >
                        <div className="selector-holder">

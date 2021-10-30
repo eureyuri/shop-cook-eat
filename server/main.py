@@ -60,16 +60,15 @@ def show_fridge():
 def get_food():
     try:
         search = request.json["search_term"]
-        print(search)
-        item = food_data_ref.where(u'name', u'==', search).where('name', '<=', search + '\uf8ff').stream()
-        print(item)
-        # food_list = []
-        # for doc in food_data_ref.stream():
-        #     data = doc.to_dict()
-        #     print(data)
-        #     food_list.append(data.name)
-        # print(food_list)
-        return jsonify(item)
+        search = search[0].upper() + search[1:].lower()
+        search_limit = chr(ord(search[0]) + 1)
+        item = food_data_ref.where('name', '>=', search).where('name', '<', search_limit).stream()
+        food_list = []
+        for doc in item:
+            data = doc.to_dict()
+            food_list.append(data['name'])
+        food_list.append('Other')
+        return jsonify(food_list)
     except Exception as e:
         return f"An Error Occurred: {e}"
 
